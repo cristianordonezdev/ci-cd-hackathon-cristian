@@ -1,51 +1,34 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
+    - name: Remove default .npmrc if present
+      run: rm -f ~/.npmrc
 
-    - name: Remove auth token from .npmrc if present
-      run: sed -i '/_authToken/d' .npmrc || true
+    - name: Install dependencies
+      run: npm ci
 
-    # Install dependencies
-    - run: npm ci
-
-    # Lint first because it is cheap
     - name: Test format with lint
       run: npm run lint
 
-    # fast unit tests
     - name: Test unit cases with jest
       run: npm test
-      
-    # if it is all good, try to build
-    - run: npm run build --if-present
 
-    # Final end-to-end integration test
+    - name: Build
+      run: npm run build --if-present
+
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
 
