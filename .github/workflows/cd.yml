@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build frontend
+      - name: Build frontend app
         run: npm run build
 
       - name: Configure AWS credentials
