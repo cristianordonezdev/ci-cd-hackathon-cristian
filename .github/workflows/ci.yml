@@ -38,9 +38,12 @@ jobs:
     - name: Test unit cases with jest
       run: npm test
       
-    # if it is all good, try to build
-    - run: npm run build --if-present
+    - name: Patch swc deps
+      run: npm run dev || true
 
+    - name: Build project
+      run: npm run build --if-present
+      
     # Final end-to-end integration test
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
