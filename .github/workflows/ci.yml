@@ -22,23 +22,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        always-auth: false
-    
-    - name: Check and remove ~/.npmrc
-      run: |
-        if [ -f ~/.npmrc ]; then cat ~/.npmrc; rm ~/.npmrc; fi
-    
-    - name: Check and remove project-level .npmrc
-      run: |
-        if [ -f .npmrc ]; then cat .npmrc; rm .npmrc; fi
-    
-    - name: Clear npm token env vars
-      run: |
-        unset NODE_AUTH_TOKEN
-        unset NPM_TOKEN
-    
-    - name: Install dependencies
-      run: npm ci
 
     - name: Test format with lint
       run: npm run lint
